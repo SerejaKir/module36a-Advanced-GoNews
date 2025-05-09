@@ -23,8 +23,19 @@ type Post struct {
 	Link    string // ссылка на источник
 }
 
+const (
+	host           = "172.16.87.117"
+	portPostges    = 5432
+	userDB         = "sergey"
+	password       = "password"
+	dbnamePostges  = "postgres"
+	collectionName = "newsdb"
+)
+
 func New() (*DB, error) {
+	os.Setenv("newsdb", "postgres://"+userDB+":"+password+"@"+host+"/"+dbnamePostges)
 	connstr := os.Getenv("newsdb")
+	//connstr := os.Getenv("postgres://" + userDB + ":" + password + "@" + host + "/" + dbnamePostges)
 	if connstr == "" {
 		return nil, errors.New("не указано подключение к БД")
 	}
