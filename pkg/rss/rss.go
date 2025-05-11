@@ -55,6 +55,7 @@ func Parse(url string) ([]storage.Post, error) {
 		p.Content = item.Description
 		p.Content = strip.StripTags(p.Content)
 		p.Link = item.Link
+		//fmt.Println(p.Title, p.Content, p.Link)
 		// Sat, 15 May 2021 04:05:00 +0300
 		item.PubDate = strings.ReplaceAll(item.PubDate, ",", "")
 		t, err := time.Parse("Mon 2 Jan 2006 15:04:05 -0700", item.PubDate)

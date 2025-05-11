@@ -25,6 +25,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	defer db.Pool.Close()
 	api := api.New(db)
 
 	// чтение и раскодирование файла конфигурации
@@ -43,13 +44,16 @@ func main() {
 	chPosts := make(chan []storage.Post)
 	chErrs := make(chan error)
 	for _, url := range config.URLS {
-		go parseURL(url, db, chPosts, chErrs, config.Period)
+		go parseURL(url, chPosts, chErrs, config.Period)
 	}
 
 	// запись потока новостей в БД
 	go func() {
 		for posts := range chPosts {
 			db.StoreNews(posts)
+			/*if err != nil {
+				log.Fatal(err)
+			}*/
 		}
 	}()
 
@@ -69,7 +73,7 @@ func main() {
 
 // Асинхронное чтение потока RSS. Раскодированные
 // новости и ошибки пишутся в каналы.
-func parseURL(url string, db *storage.DB, posts chan<- []storage.Post, errs chan<- error, period int) {
+func parseURL(url string, posts chan<- []storage.Post, errs chan<- error, period int) {
 	for {
 		news, err := rss.Parse(url)
 		if err != nil {

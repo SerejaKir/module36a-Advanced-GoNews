@@ -36,3 +36,17 @@ func TestDB_News(t *testing.T) {
 	}
 	t.Logf("%+v", news)
 }
+
+func TestDB_Close(t *testing.T) {
+	tests := []struct {
+		name string
+		db   *DB
+	}{
+		// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			tt.db.Close()
+		})
+	}
+}
